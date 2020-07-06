@@ -1,0 +1,33 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  post-build:
+    runs-on: ubuntu-latest
+    name: Post Build
+    steps:
+      - name: Check Pages Custom Domain is changed
+        id: isCnameChanged
+        uses: actions/github-script@v2
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.repos.getPages({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            }).then((data)=>{
+              console.log('data',data)
+            }).catch(e=>{
+              console.log('eee',e)
+            }
